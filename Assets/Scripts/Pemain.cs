@@ -11,11 +11,43 @@ public class Pemain : MonoBehaviour
     private Vector3 lastMoveDir;
 
     private bool isWalking;
+
+    private void Start()
+    {
+        gameInput.onInteractActions += GameInput_onInteractActions;
+    }
+
+    private void GameInput_onInteractActions(object sender, System.EventArgs e)
+    {
+        Vector2 inputVector = gameInput.GetMovementVectorNormalized();
+
+        // Perlu mendapatkan movement direction untuk mengedit transform.position berdasarkan
+        // arah vector
+        Vector3 moveDir = new Vector3(inputVector.x, 0f, inputVector.y);
+        if (moveDir != Vector3.zero)
+        {
+            lastMoveDir = moveDir;
+        }
+        float interactDistance = 2f;
+
+        // Cek apakah terjadi collider collision lagi menggunakan metode raycast
+        if (Physics.Raycast(transform.position, moveDir, out RaycastHit raycastHit, interactDistance, countersLayerMask))
+        {
+            // Sama seperti
+            // ClearCounter clearCounter = raycastHit.transform.GetComponent<ClearCounter>();
+            // if (clearCounter != null){}
+            if (raycastHit.transform.TryGetComponent(out ClearCounter clearCounter))
+            {
+                clearCounter.Interact();
+            }
+        }
+    }
+
     private void Update()
     {
 
         HandleMovement();
-        HandleInteractions();
+        //HandleInteractions();
        
     }
 
@@ -24,7 +56,7 @@ public class Pemain : MonoBehaviour
         return isWalking;
     }
 
-    private void HandleInteractions()
+    /*private void HandleInteractions()
     {
         Vector2 inputVector = gameInput.GetMovementVectorNormalized();
 
@@ -49,7 +81,7 @@ public class Pemain : MonoBehaviour
             }
         }
         
-    }
+    }*/
 
     private void HandleMovement() 
     {
