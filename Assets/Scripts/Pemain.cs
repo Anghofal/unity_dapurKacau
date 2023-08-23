@@ -6,82 +6,39 @@ public class Pemain : MonoBehaviour
 {
     //Ingat selalu gunakan private dan serializefield dan bukan public
     [SerializeField] private float movSpeed;
+    ClearCounter selectedCounter;
     [SerializeField] private GameInput gameInput;
     [SerializeField] private LayerMask countersLayerMask;
     private Vector3 lastMoveDir;
 
     private bool isWalking;
 
+
+
     private void Start()
     {
         gameInput.onInteractActions += GameInput_onInteractActions;
-    }
-
-    private void GameInput_onInteractActions(object sender, System.EventArgs e)
-    {
-        Vector2 inputVector = gameInput.GetMovementVectorNormalized();
-
-        // Perlu mendapatkan movement direction untuk mengedit transform.position berdasarkan
-        // arah vector
-        Vector3 moveDir = new Vector3(inputVector.x, 0f, inputVector.y);
-        if (moveDir != Vector3.zero)
-        {
-            lastMoveDir = moveDir;
-        }
-        float interactDistance = 2f;
-
-        // Cek apakah terjadi collider collision lagi menggunakan metode raycast
-        if (Physics.Raycast(transform.position, moveDir, out RaycastHit raycastHit, interactDistance, countersLayerMask))
-        {
-            // Sama seperti
-            // ClearCounter clearCounter = raycastHit.transform.GetComponent<ClearCounter>();
-            // if (clearCounter != null){}
-            if (raycastHit.transform.TryGetComponent(out ClearCounter clearCounter))
-            {
-                clearCounter.Interact();
-            }
-        }
     }
 
     private void Update()
     {
 
         HandleMovement();
-        //HandleInteractions();
-       
+        HandleInteractions();
+
+    }
+    private void GameInput_onInteractActions(object sender, System.EventArgs e)
+    {
+        if(selectedCounter != null)
+        {
+            selectedCounter.Interact();
+        }
     }
 
     public bool GetisWalking()
     {
         return isWalking;
     }
-
-    /*private void HandleInteractions()
-    {
-        Vector2 inputVector = gameInput.GetMovementVectorNormalized();
-
-        // Perlu mendapatkan movement direction untuk mengedit transform.position berdasarkan
-        // arah vector
-        Vector3 moveDir = new Vector3(inputVector.x, 0f, inputVector.y);
-        if (moveDir != Vector3.zero)
-        {
-            lastMoveDir = moveDir;
-        }
-        float interactDistance = 2f;
-
-        // Cek apakah terjadi collider collision lagi menggunakan metode raycast
-        if (Physics.Raycast(transform.position,moveDir,out RaycastHit raycastHit,interactDistance,countersLayerMask))
-        {
-            // Sama seperti
-            // ClearCounter clearCounter = raycastHit.transform.GetComponent<ClearCounter>();
-            // if (clearCounter != null){}
-            if (raycastHit.transform.TryGetComponent(out ClearCounter clearCounter))
-            {
-                clearCounter.Interact();
-            }
-        }
-        
-    }*/
 
     private void HandleMovement() 
     {
@@ -145,4 +102,43 @@ public class Pemain : MonoBehaviour
         float rotateSpeed = 10f;
         transform.forward = Vector3.Slerp(transform.forward, moveDir, Time.deltaTime * rotateSpeed);
     }
+    private void HandleInteractions()
+    {
+        Vector2 inputVector = gameInput.GetMovementVectorNormalized();
+
+        // Perlu mendapatkan movement direction untuk mengedit transform.position berdasarkan
+        // arah vector
+        Vector3 moveDir = new Vector3(inputVector.x, 0f, inputVector.y);
+        if (moveDir != Vector3.zero)
+        {
+            lastMoveDir = moveDir;
+        }
+        float interactDistance = 2f;
+
+        // Cek apakah terjadi collider collision lagi menggunakan metode raycast
+        if (Physics.Raycast(transform.position, moveDir, out RaycastHit raycastHit, interactDistance, countersLayerMask))
+        {
+            // Sama seperti
+            // ClearCounter clearCounter = raycastHit.transform.GetComponent<ClearCounter>();
+            // if (clearCounter != null){}
+            if (raycastHit.transform.TryGetComponent(out ClearCounter clearCounter))
+            {
+                if(selectedCounter != clearCounter)
+                {
+                    selectedCounter = clearCounter;
+                }
+                else
+                {
+                    selectedCounter = null;
+                }
+            }
+            else
+            {
+                selectedCounter = null;
+            }
+        }
+
+    }
 }
+
+

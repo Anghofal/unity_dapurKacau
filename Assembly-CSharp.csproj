@@ -61,6 +61,7 @@
     <Compile Include="Assets\Scripts\PlayerAnimator.cs" />
     <Compile Include="Assets\Scripts\Pemain.cs" />
     <Compile Include="Assets\Scripts\PlayerInputActions.cs" />
+    <Compile Include="Assets\Scripts\SelectedCounterVisual.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
