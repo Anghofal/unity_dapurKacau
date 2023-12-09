@@ -15,6 +15,8 @@ public class Pemain : MonoBehaviour, IKitchenObjectParent
 
     BaseCounter selectedCounter;
     public event EventHandler<OnSelectedCounterChangedEventArgs> OnSelectedCounterChanged;
+    
+    
 
     [SerializeField] private Transform kitchenObjectHoldPoint;
     private KitchenObject kitchenObject;
@@ -83,7 +85,16 @@ public class Pemain : MonoBehaviour, IKitchenObjectParent
 
     private void Start()
     {
-        gameInput.onInteractActions += GameInput_onInteractActions;
+        gameInput.OnInteractActions += GameInput_OnInteractActions;
+        gameInput.OnAlternateInteract += GameInput_OnAlternateInteract;
+    }
+
+    private void GameInput_OnAlternateInteract(object sender, EventArgs e)
+    {
+        if (selectedCounter != null)
+        {
+            selectedCounter.InteractAlternate(this);
+        }
     }
 
     private void Update()
@@ -102,7 +113,7 @@ public class Pemain : MonoBehaviour, IKitchenObjectParent
         }
         Instance = this;
     }
-    private void GameInput_onInteractActions(object sender, System.EventArgs e)
+    private void GameInput_OnInteractActions(object sender, System.EventArgs e)
     {
         if(selectedCounter != null)
         {
@@ -145,7 +156,7 @@ public class Pemain : MonoBehaviour, IKitchenObjectParent
             colliderHit = Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, checkMoveDirX, moveDistance);
 
 
-            if (!colliderHit)
+            if (!colliderHit && moveDir.x != 0)
             {
                 // Jika tidak ada maka movement direction player akan bernilai (X, 0, 0)
                 moveDir = checkMoveDirX;
@@ -157,7 +168,7 @@ public class Pemain : MonoBehaviour, IKitchenObjectParent
                 // Lakukan pengecekan apakah pada arah vector z masih ada collider
                 colliderHit = Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, checkMoveDirZ, moveDistance);
 
-                if (!colliderHit)
+                if (!colliderHit && moveDir.z != 0)
                 {
                     // Jika tidak ada maka movement direction player akan bernilai (0, 0, Z)
                     moveDir = checkMoveDirZ;

@@ -3,7 +3,9 @@ guid: 7d68fe142fc648a43816cda8c2742ff4
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - pointTopOfClearCounter: {instanceID: 0}
+  - cutKitchenObjectSO: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

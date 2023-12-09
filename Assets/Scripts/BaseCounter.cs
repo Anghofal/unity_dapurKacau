@@ -9,7 +9,12 @@ public class BaseCounter : MonoBehaviour, IKitchenObjectParent
 
     public virtual void Interact(Pemain pemain)
     {
-        Debug.LogError("The function on clear and container counter must be overrided");
+        Debug.LogError("The function must be overrided");
+    }
+
+    public virtual void InteractAlternate(Pemain pemain)
+    {
+        Debug.LogError("The function must be overrided");
     }
 
     public Transform GetKitchenObjectLocation()
@@ -36,4 +41,5 @@ public class BaseCounter : MonoBehaviour, IKitchenObjectParent
     {
         return kitchenObject != null;
     }
+
 }
