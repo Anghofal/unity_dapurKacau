@@ -12,11 +12,7 @@ public class ContainerCounter : BaseCounter
     {
         if (!pemain.HasKitchenObject())
         {
-            Transform kitchenObjectTransform = Instantiate(kitchenObjectSO.prefab);
-            kitchenObjectTransform.localPosition = Vector3.zero;
-            // got the reference from game object that we just spawned
-            KitchenObject kitchenObject = kitchenObjectTransform.GetComponent<KitchenObject>();
-            kitchenObject.SetKitchenObjectParent(pemain);
+            KitchenObject.SpawnKitchenObject(kitchenObjectSO, pemain);
 
             OnPlayerGrabKitchenObject?.Invoke(this, EventArgs.Empty);
         }
