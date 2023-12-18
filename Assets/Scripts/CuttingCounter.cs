@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class CuttingCounter : BaseCounter
 {
-    [SerializeField] private KitchenObjectSO cutKitchenObjectSO;
+    [SerializeField] private CutRecipeSO[] cutKitchenObjectSOArray;
     public override void Interact(Pemain pemain)
     {
-        Debug.Log("berhasil interaksi");
+        
         // condition for the clear counter is there kitchen object there
         if (!HasKitchenObject())
         {
@@ -43,10 +43,23 @@ public class CuttingCounter : BaseCounter
     {
         if (HasKitchenObject())
         {
+            KitchenObjectSO cutKitchenObjectSO = GetCutItemRecipeFromSO(GetKitchenObject().GetKitchenObjectSO());
             GetKitchenObject().DestroySelf();
             KitchenObject.SpawnKitchenObject(cutKitchenObjectSO, this);
         }
     }
 
+    private KitchenObjectSO GetCutItemRecipeFromSO(KitchenObjectSO kitchen)
+    {
+        foreach (CutRecipeSO cutRecipeSO in cutKitchenObjectSOArray)
+        {
+            if (cutRecipeSO.input == kitchen)
+            {
+                return cutRecipeSO.output;
+            }
+        }
+        return null;
+        
+    }
 
 }

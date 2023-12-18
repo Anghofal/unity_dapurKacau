@@ -85,7 +85,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pointTopOfClearCounter: {fileID: 4454838589367766112}
-  cutKitchenObjectSO: {fileID: 11400000, guid: 61add7e64b2627d46834c8aa7ec8269b, type: 2}
+  cutKitchenObjectSOArray:
+  - {fileID: 11400000, guid: f409d2388dc8e8f408c0c7436cc88b14, type: 2}
+  - {fileID: 11400000, guid: 903d8c5a6ce778d4899678bde9064e8f, type: 2}
+  - {fileID: 11400000, guid: 930dcf11f8427054cb52b79ece3b8dac, type: 2}
 --- !u!1001 &5605459165490067980
 PrefabInstance:
   m_ObjectHideFlags: 0

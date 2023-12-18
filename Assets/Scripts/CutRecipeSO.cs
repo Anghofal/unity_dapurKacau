@@ -5,6 +5,6 @@ using UnityEngine;
 [CreateAssetMenu()]
 public class CutRecipeSO : ScriptableObject
 {
-    [SerializeField] private KitchenObjectSO input;
-    [SerializeField] private KitchenObjectSO output;
+    public KitchenObjectSO input;
+    public KitchenObjectSO output;
 }
