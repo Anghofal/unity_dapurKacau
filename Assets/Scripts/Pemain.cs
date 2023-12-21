@@ -15,8 +15,6 @@ public class Pemain : MonoBehaviour, IKitchenObjectParent
 
     BaseCounter selectedCounter;
     public event EventHandler<OnSelectedCounterChangedEventArgs> OnSelectedCounterChanged;
-    
-    
 
     [SerializeField] private Transform kitchenObjectHoldPoint;
     private KitchenObject kitchenObject;
@@ -85,6 +83,7 @@ public class Pemain : MonoBehaviour, IKitchenObjectParent
 
     private void Start()
     {
+        
         gameInput.OnInteractActions += GameInput_OnInteractActions;
         gameInput.OnAlternateInteract += GameInput_OnAlternateInteract;
     }
@@ -190,15 +189,13 @@ public class Pemain : MonoBehaviour, IKitchenObjectParent
     }
     private void HandleInteractions()
     {
+
         Vector2 inputVector = gameInput.GetMovementVectorNormalized();
 
         // Perlu mendapatkan movement direction untuk mengedit transform.position berdasarkan
         // arah vector
         Vector3 moveDir = new Vector3(inputVector.x, 0f, inputVector.y);
-        if (moveDir != Vector3.zero)
-        {
-            lastMoveDir = moveDir;
-        }
+        
         float interactDistance = 1f;
 
         // Cek apakah terjadi collider collision lagi menggunakan metode raycast
@@ -215,21 +212,26 @@ public class Pemain : MonoBehaviour, IKitchenObjectParent
                     // from clearCounter we get from raycastHit
                     SetSelectedCounter(baseCounter);
                 }
-                else
-                {
-                    // setting selectedCounter (Counter global variabel to null)
-                    // to make sure clearCounter is always null
-                    // so the condition will always met and clearCounter will always set to
-                    // new clear counter
-                    SetSelectedCounter(null);
-
-                    
-                }
             }
             else
             {
+                // setting selectedCounter (Counter global variabel to null)
+                // to make sure clearCounter is always null
+                // so the condition will always met and clearCounter will always set to
+                // new clear counter
                 SetSelectedCounter(null);
+
+
             }
+        }
+        else
+        {
+            SetSelectedCounter(null);
+        }
+
+        if (moveDir != Vector3.zero)
+        {
+            lastMoveDir = moveDir;
         }
 
     }
