@@ -41,7 +41,7 @@ public class CuttingCounter : BaseCounter
 
     public override void InteractAlternate(Pemain pemain)
     {
-        if (HasKitchenObject())
+        if (HasKitchenObject() && HasRecipe(GetKitchenObject().GetKitchenObjectSO()))
         {
             KitchenObjectSO cutKitchenObjectSO = GetCutItemRecipeFromSO(GetKitchenObject().GetKitchenObjectSO());
             GetKitchenObject().DestroySelf();
@@ -60,6 +60,18 @@ public class CuttingCounter : BaseCounter
         }
         return null;
         
+    }
+
+    private bool HasRecipe(KitchenObjectSO kitchen)
+    {
+        foreach (CutRecipeSO cutRecipeSO in cutKitchenObjectSOArray)
+        {
+            if (cutRecipeSO.input == kitchen)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
 }
