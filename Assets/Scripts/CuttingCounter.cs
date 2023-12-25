@@ -5,6 +5,7 @@ using UnityEngine;
 public class CuttingCounter : BaseCounter
 {
     [SerializeField] private CutRecipeSO[] cutKitchenObjectSOArray;
+    private int cuttingProgres;
     public override void Interact(Pemain pemain)
     {
         
@@ -43,20 +44,24 @@ public class CuttingCounter : BaseCounter
     {
         if (HasKitchenObject() && HasRecipe(GetKitchenObject().GetKitchenObjectSO()))
         {
-            KitchenObjectSO cutKitchenObjectSO = GetCutItemRecipeFromSO(GetKitchenObject().GetKitchenObjectSO());
-            GetKitchenObject().DestroySelf();
-            KitchenObject.SpawnKitchenObject(cutKitchenObjectSO, this);
+            cuttingProgres++;
+            CutRecipeSO cutRecipeSO = GetCutRecipeSO(GetKitchenObject().GetKitchenObjectSO());
+            if (cuttingProgres >= cutRecipeSO.cuttingCountProgres)
+            {
+                KitchenObjectSO cutKitchenObjectSO = GetCutItemRecipeFromSO(GetKitchenObject().GetKitchenObjectSO());
+                GetKitchenObject().DestroySelf();
+                KitchenObject.SpawnKitchenObject(cutKitchenObjectSO, this);
+                cuttingProgres = 0;
+            }
         }
     }
 
     private KitchenObjectSO GetCutItemRecipeFromSO(KitchenObjectSO kitchen)
     {
-        foreach (CutRecipeSO cutRecipeSO in cutKitchenObjectSOArray)
+        CutRecipeSO cutRecipeSO = GetCutRecipeSO(kitchen);
+        if (cutRecipeSO.input == kitchen)
         {
-            if (cutRecipeSO.input == kitchen)
-            {
-                return cutRecipeSO.output;
-            }
+            return cutRecipeSO.output;
         }
         return null;
         
@@ -64,14 +69,24 @@ public class CuttingCounter : BaseCounter
 
     private bool HasRecipe(KitchenObjectSO kitchen)
     {
-        foreach (CutRecipeSO cutRecipeSO in cutKitchenObjectSOArray)
+        CutRecipeSO cutRecipeSO = GetCutRecipeSO(kitchen);
+        if (cutRecipeSO.input == kitchen)
         {
-            if (cutRecipeSO.input == kitchen)
-            {
-                return true;
-            }
+            return true;
         }
         return false;
+    }
+
+    private CutRecipeSO GetCutRecipeSO(KitchenObjectSO kitchenObjectSO)
+    {
+        foreach (CutRecipeSO cutRecipeSO in cutKitchenObjectSOArray)
+        {
+            if (cutRecipeSO.input == kitchenObjectSO)
+            {
+                return cutRecipeSO;
+            }
+        }
+        return null;
     }
 
 }
