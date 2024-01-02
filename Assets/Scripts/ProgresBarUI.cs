@@ -1,18 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
 public class ProgresBarUI : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] private Image barImage;
+    [SerializeField] private CuttingCounter cuttingCounter;
+
+    private void Start()
     {
-        
+        cuttingCounter.OnProgressChange += CuttingCounter_OnProgressChange;
+        barImage.fillAmount = 0;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void CuttingCounter_OnProgressChange(object sender, CuttingCounter.OnProgressChangeEventArgs e)
     {
-        
+        barImage.fillAmount = e.progresNormalized;
     }
 }

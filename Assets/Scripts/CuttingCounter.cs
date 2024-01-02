@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,6 +7,12 @@ public class CuttingCounter : BaseCounter
 {
     [SerializeField] private CutRecipeSO[] cutKitchenObjectSOArray;
     private int cuttingProgres;
+    public event EventHandler<OnProgressChangeEventArgs> OnProgressChange;
+    public class OnProgressChangeEventArgs : EventArgs
+    {
+        public float progresNormalized;
+    }
+
     public override void Interact(Pemain pemain)
     {
         
@@ -16,6 +23,7 @@ public class CuttingCounter : BaseCounter
             if (pemain.HasKitchenObject())
             {
                 pemain.GetKitchenObject().SetKitchenObjectParent(this);
+                
             }
             // dan jika pemain tidak memiliki kitchen object 
             else
@@ -46,12 +54,24 @@ public class CuttingCounter : BaseCounter
         {
             cuttingProgres++;
             CutRecipeSO cutRecipeSO = GetCutRecipeSO(GetKitchenObject().GetKitchenObjectSO());
+
+            OnProgressChange?.Invoke(this, new OnProgressChangeEventArgs
+            {
+                progresNormalized = (float)cuttingProgres / cutRecipeSO.cuttingCountProgres
+
+            });
             if (cuttingProgres >= cutRecipeSO.cuttingCountProgres)
             {
                 KitchenObjectSO cutKitchenObjectSO = GetCutItemRecipeFromSO(GetKitchenObject().GetKitchenObjectSO());
                 GetKitchenObject().DestroySelf();
                 KitchenObject.SpawnKitchenObject(cutKitchenObjectSO, this);
                 cuttingProgres = 0;
+
+                OnProgressChange?.Invoke(this, new OnProgressChangeEventArgs
+                {
+                    progresNormalized = (float)cuttingProgres / cutRecipeSO.cuttingCountProgres
+
+                });
             }
         }
     }
