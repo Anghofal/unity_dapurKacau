@@ -11,10 +11,31 @@ public class ProgresBarUI : MonoBehaviour
     {
         cuttingCounter.OnProgressChange += CuttingCounter_OnProgressChange;
         barImage.fillAmount = 0;
+
+        Hide();
     }
 
     private void CuttingCounter_OnProgressChange(object sender, CuttingCounter.OnProgressChangeEventArgs e)
     {
+        if (e.progresNormalized != 0f || e.progresNormalized == 1f)
+        {
+            Show();
+        }
+        else
+        {
+            Hide();
+        }
+
         barImage.fillAmount = e.progresNormalized;
+    }
+
+    private void Show()
+    {
+        gameObject.SetActive(true);
+    }
+
+    private void Hide()
+    {
+        gameObject.SetActive(false);
     }
 }
