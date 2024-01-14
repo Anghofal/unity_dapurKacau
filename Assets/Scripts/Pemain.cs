@@ -163,7 +163,7 @@ public class Pemain : MonoBehaviour, IKitchenObjectParent
             else
             {
 
-                Vector3 checkMoveDirZ = new Vector3(0, 0, moveDir.z).normalized;
+                Vector3 checkMoveDirZ = new Vector3(0,0, moveDir.z).normalized;
                 // Lakukan pengecekan apakah pada arah vector z masih ada collider
                 colliderHit = Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, checkMoveDirZ, moveDistance);
 
@@ -171,6 +171,10 @@ public class Pemain : MonoBehaviour, IKitchenObjectParent
                 {
                     // Jika tidak ada maka movement direction player akan bernilai (0, 0, Z)
                     moveDir = checkMoveDirZ;
+                }
+                else
+                {
+                    colliderHit = Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, moveDir, moveDistance);
                 }
             }
         }
