@@ -282,6 +282,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2864342089436133645, guid: ac2fb6710f1fe6641bda393fc9ad7790, type: 3}
   m_PrefabInstance: {fileID: 8255260662903297032}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &654645459913678442 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8900616198461409890, guid: ac2fb6710f1fe6641bda393fc9ad7790, type: 3}
+  m_PrefabInstance: {fileID: 8255260662903297032}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &3544270888521570572
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -294,4 +299,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 132383756ea2a1f4495583ea9942cccd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pointTopOfClearCounter: {fileID: 0}
+  pointTopOfClearCounter: {fileID: 654645459913678442}
+  fryingRecipeSOArray:
+  - {fileID: 11400000, guid: 9b40f444d39389c43a525165eed990b0, type: 2}
+  - {fileID: 11400000, guid: 35e97202c0058f243bb6c7b6432641f0, type: 2}
