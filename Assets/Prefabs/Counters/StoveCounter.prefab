@@ -302,4 +302,5 @@ MonoBehaviour:
   pointTopOfClearCounter: {fileID: 654645459913678442}
   fryingRecipeSOArray:
   - {fileID: 11400000, guid: 9b40f444d39389c43a525165eed990b0, type: 2}
-  - {fileID: 11400000, guid: 35e97202c0058f243bb6c7b6432641f0, type: 2}
+  burningRecipeSOArray:
+  - {fileID: 11400000, guid: 3edd1d2c20842d5448c5d95d3dad565e, type: 2}

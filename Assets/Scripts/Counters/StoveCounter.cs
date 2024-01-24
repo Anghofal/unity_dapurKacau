@@ -14,8 +14,11 @@ public class StoveCounter : BaseCounter
     }
 
     [SerializeField] private FryingRecipeSO[] fryingRecipeSOArray;
+    [SerializeField] private BurningRecipeSO[] burningRecipeSOArray;
     private FryingRecipeSO fryingRecipeSO;
+    private BurningRecipeSO burningRecipeSO;
     private float fryingTimer;
+    private float burningTimer;
     private State state;
 
     private void Start()
@@ -37,11 +40,23 @@ public class StoveCounter : BaseCounter
                     {
                         GetKitchenObject().DestroySelf();
                         KitchenObject.SpawnKitchenObject(fryingRecipeSO.output, this);
+                        burningRecipeSO = GetBurningRecipeSO(GetKitchenObject().GetKitchenObjectSO());
                         state = State.Fried;
+                        burningTimer = 0f;
                     }
                 }
                 break;
             case State.Fried:
+                if (HasKitchenObject())
+                {
+                    burningTimer += Time.deltaTime;
+                    if (burningTimer > burningRecipeSO.burningTime)
+                    {
+                        GetKitchenObject().DestroySelf();
+                        KitchenObject.SpawnKitchenObject(burningRecipeSO.output, this);
+                        state = State.Burned;
+                    }
+                }
                 break;
             case State.Burned:
                 break;
@@ -87,6 +102,7 @@ public class StoveCounter : BaseCounter
             else
             {
                 GetKitchenObject().SetKitchenObjectParent(pemain);
+                state = State.Idle;
             }
         }
     }
@@ -125,5 +141,19 @@ public class StoveCounter : BaseCounter
         }
         return fryingRecipeAny;
         
+    }
+
+    private BurningRecipeSO GetBurningRecipeSO(KitchenObjectSO kitchenObjectSO)
+    {
+        BurningRecipeSO fryingRecipeAny = null;
+        foreach (BurningRecipeSO burningRecipeSO in burningRecipeSOArray)
+        {
+            fryingRecipeAny = burningRecipeSO;
+            if (burningRecipeSO.input == kitchenObjectSO)
+            {
+                return burningRecipeSO;
+            }
+        }
+        return fryingRecipeAny;
     }
 }
