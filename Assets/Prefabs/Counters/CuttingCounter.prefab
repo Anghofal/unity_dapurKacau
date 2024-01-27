@@ -116,7 +116,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   barImage: {fileID: 5079491723255240904}
-  cuttingCounter: {fileID: 4369082693993028902}
+  gameObjectHasProgressUI: {fileID: 7032296781788282737}
 --- !u!114 &3157284624837439886
 MonoBehaviour:
   m_ObjectHideFlags: 0
