@@ -6,6 +6,9 @@ using UnityEngine;
 public class PlatesCounter : BaseCounter
 {
     public event EventHandler OnPlatesSpawn;
+    public event EventHandler OnPlatesRemove;
+
+    [SerializeField] private KitchenObjectSO platesKitchenObjectSO;
     private float spawnTimer;
     private float spawnTimerMax = 4f;
     private float platesAlredySpawned;
@@ -22,6 +25,20 @@ public class PlatesCounter : BaseCounter
             {
                 platesAlredySpawned++;
                 OnPlatesSpawn?.Invoke(this, EventArgs.Empty);
+            }
+        }
+    }
+
+    public override void Interact(Pemain pemain)
+    {
+        if (!pemain.HasKitchenObject())
+        {
+            // jika pemain tidak memiliki kitchenObject
+            if (platesAlredySpawned > 0)
+            {
+                platesAlredySpawned--;
+                KitchenObject.SpawnKitchenObject(platesKitchenObjectSO, pemain);
+                OnPlatesRemove?.Invoke(this, EventArgs.Empty);
             }
         }
     }

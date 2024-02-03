@@ -268,3 +268,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pointTopOfClearCounter: {fileID: 2343706940011561179}
+  platesKitchenObjectSO: {fileID: 11400000, guid: 7b570ee3ffdbb3e4c9a0d7d24be05dec, type: 2}
