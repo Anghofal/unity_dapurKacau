@@ -36,7 +36,14 @@ public class ClearCounter : BaseCounter
             // and if pemain has kitchen object
             if (pemain.HasKitchenObject())
             {
+                if (pemain.GetKitchenObject() is PlateKitchenObject)
+                {
+                    PlateKitchenObject plateKitchenObject = pemain.GetKitchenObject() as PlateKitchenObject;
 
+                    plateKitchenObject.addIngredient(pemain.GetKitchenObject().GetKitchenObjectSO());
+                    GetKitchenObject().DestroySelf();
+
+                }
             }
             // and if pemain did not have the kitchen object, kitchen object on this clear counter move to the pemain
             else
