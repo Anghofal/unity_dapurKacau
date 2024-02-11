@@ -33,7 +33,15 @@ public class CuttingCounter : BaseCounter, IHasProgressBarUI
             // and if pemain has kitchen object
             if (pemain.HasKitchenObject())
             {
-
+                // jika kitchen object yang di pegang pemain adalah piring
+                if (pemain.GetKitchenObject().TryGetPlate(out PlateKitchenObject plateKitchenObject))
+                {
+                    // dapatkan kitchen object yang dipegang pemain sebagai plateKitchenObject
+                    if (plateKitchenObject.TryAddIngredient(GetKitchenObject().GetKitchenObjectSO()))
+                    {
+                        GetKitchenObject().DestroySelf();
+                    }
+                }
             }
             // and if pemain did not have the kitchen object, kitchen object on this clear counter move to the pemain
             else

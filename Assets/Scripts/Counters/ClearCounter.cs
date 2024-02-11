@@ -15,7 +15,7 @@ public class ClearCounter : BaseCounter
     }
     public override void Interact(Pemain pemain)
     {
-        Debug.Log("berhasil interaksi");
+        
         // condition for the clear counter is there kitchen object there
         if (!HasKitchenObject())
         {
@@ -36,13 +36,14 @@ public class ClearCounter : BaseCounter
             // and if pemain has kitchen object
             if (pemain.HasKitchenObject())
             {
-                if (pemain.GetKitchenObject() is PlateKitchenObject)
+                // jika kitchen object yang di pegang pemain adalah piring
+                if (pemain.GetKitchenObject().TryGetPlate(out PlateKitchenObject plateKitchenObject))
                 {
-                    PlateKitchenObject plateKitchenObject = pemain.GetKitchenObject() as PlateKitchenObject;
-
-                    plateKitchenObject.addIngredient(pemain.GetKitchenObject().GetKitchenObjectSO());
-                    GetKitchenObject().DestroySelf();
-
+                    // dapatkan kitchen object yang dipegang pemain sebagai plateKitchenObject
+                    if (plateKitchenObject.TryAddIngredient(GetKitchenObject().GetKitchenObjectSO()))
+                    {
+                        GetKitchenObject().DestroySelf();
+                    }
                 }
             }
             // and if pemain did not have the kitchen object, kitchen object on this clear counter move to the pemain

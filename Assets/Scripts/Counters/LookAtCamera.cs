@@ -27,6 +27,7 @@ public class LookAtCamera : MonoBehaviour
                 break;
             case Mode.CameraForward:
                 transform.forward = Camera.main.transform.forward;
+                
                 break;
             case Mode.CameraForwardInverted:
                 transform.forward = -Camera.main.transform.forward;
