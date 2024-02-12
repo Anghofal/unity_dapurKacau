@@ -45,6 +45,18 @@ public class ClearCounter : BaseCounter
                         GetKitchenObject().DestroySelf();
                     }
                 }
+                // jika pemain tidak memegang piring
+                else
+                {
+                    // jika piring ada pada clear counter
+                    if (GetKitchenObject().TryGetPlate(out plateKitchenObject))
+                    {
+                        if (plateKitchenObject.TryAddIngredient(GetKitchenObject().GetKitchenObjectSO()))
+                        {
+                            pemain.GetKitchenObject().DestroySelf();
+                        }
+                    }
+                }
             }
             // and if pemain did not have the kitchen object, kitchen object on this clear counter move to the pemain
             else
