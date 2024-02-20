@@ -4,11 +4,7 @@ using UnityEngine;
 
 public class ClearCounter : BaseCounter
 {
-
     //[SerializeField] private KitchenObjectSO kitchenObjectSO;
-    
-    
-    
     private void Update()
     {
         
@@ -42,6 +38,7 @@ public class ClearCounter : BaseCounter
                     // dapatkan kitchen object yang dipegang pemain sebagai plateKitchenObject
                     if (plateKitchenObject.TryAddIngredient(GetKitchenObject().GetKitchenObjectSO()))
                     {
+                        
                         GetKitchenObject().DestroySelf();
                     }
                 }
@@ -51,7 +48,7 @@ public class ClearCounter : BaseCounter
                     // jika piring ada pada clear counter
                     if (GetKitchenObject().TryGetPlate(out plateKitchenObject))
                     {
-                        if (plateKitchenObject.TryAddIngredient(GetKitchenObject().GetKitchenObjectSO()))
+                        if (plateKitchenObject.TryAddIngredient(pemain.GetKitchenObject().GetKitchenObjectSO()))
                         {
                             pemain.GetKitchenObject().DestroySelf();
                         }

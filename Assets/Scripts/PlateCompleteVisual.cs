@@ -18,10 +18,26 @@ public class PlateCompleteVisual : MonoBehaviour
     private void Start()
     {
         plateKitchenObject.OnIngredientAdd += PlateKitchenObject_OnIngredientAdd;
+
+        // untuk setiap objek yang berada di List kitchenObjectSO_GameObjects
+        foreach (KitchenObjectSO_GameObject kitchenObjectSO in kitchenObjectSO_GameObjects)
+        {
+            // objek yang di tunjuk di aktifkan
+            kitchenObjectSO.gameObject.SetActive(false);
+        }
     }
 
     private void PlateKitchenObject_OnIngredientAdd(object sender, PlateKitchenObject.OnIngredientAddEventArgs e)
     {
-        //e.kitchenObjectSO
+        // untuk setiap objek yang berada di List kitchenObjectSO_GameObjects
+        foreach (KitchenObjectSO_GameObject kitchenObjectSO in kitchenObjectSO_GameObjects)
+        {
+            // jika objek yang di tunjuk sama dengan kitchenObjectSo yang ada pada event
+            if(kitchenObjectSO.kitchenObjectSO == e.kitchenObjectSO)
+            {
+                // objek yang di tunjuk di aktifkan
+                kitchenObjectSO.gameObject.SetActive(true);
+            }
+        }
     }
 }

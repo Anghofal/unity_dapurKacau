@@ -7,6 +7,7 @@ public class BaseCounter : MonoBehaviour, IKitchenObjectParent
     [SerializeField] private Transform pointTopOfClearCounter;
     private KitchenObject kitchenObject;
 
+    // sebuah abstract function yang dapat di ovveride setiap counter dengan sifat yang berbeda - beda
     public virtual void Interact(Pemain pemain)
     {
         Debug.LogError("The function must be overrided");

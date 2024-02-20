@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class CuttingCounter : BaseCounter, IHasProgressBarUI
 {
+    // Array berisi kitchenObjectSO dari recipe sayuran ke potongan sayuran
     [SerializeField] private CutRecipeSO[] cutKitchenObjectSOArray;
     private int cuttingProgres;
     public event EventHandler<IHasProgressBarUI.OnProgressChangeEventArgs> OnProgressChange;
@@ -54,9 +55,11 @@ public class CuttingCounter : BaseCounter, IHasProgressBarUI
 
     public override void InteractAlternate(Pemain pemain)
     {
+        // jika cutting counter memiliki objek dan HasRecipe() return true
         if (HasKitchenObject() && HasRecipe(GetKitchenObject().GetKitchenObjectSO()))
         {
             cuttingProgres++;
+
             CutRecipeSO cutRecipeSO = GetCutRecipeSO(GetKitchenObject().GetKitchenObjectSO());
 
             OnProgressChange?.Invoke(this, new IHasProgressBarUI.OnProgressChangeEventArgs
@@ -93,7 +96,9 @@ public class CuttingCounter : BaseCounter, IHasProgressBarUI
 
     private bool HasRecipe(KitchenObjectSO kitchen)
     {
+        // dapatkan recipe dari fungsi GetCutRecipeSO
         CutRecipeSO cutRecipeSO = GetCutRecipeSO(kitchen);
+        // jika recipe.input adalah kitchen
         if (cutRecipeSO.input == kitchen)
         {
             return true;
@@ -103,13 +108,18 @@ public class CuttingCounter : BaseCounter, IHasProgressBarUI
 
     private CutRecipeSO GetCutRecipeSO(KitchenObjectSO kitchenObjectSO)
     {
+        
+        // untuk setiap objek di dalam cutKitchenObjectSOArray
         foreach (CutRecipeSO cutRecipeSO in cutKitchenObjectSOArray)
         {
+            // jika objek.input adalah kitchenObjectSO
             if (cutRecipeSO.input == kitchenObjectSO)
             {
+                // return recipe tersebut
                 return cutRecipeSO;
             }
         }
+        // eror nya disini
         return null;
     }
 
