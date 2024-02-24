@@ -20,6 +20,11 @@ public class PlateKitchenObject : KitchenObject
         listKitchen = new List<KitchenObjectSO>();
     }
 
+    public List<KitchenObjectSO> GetKitchenObjectSOList()
+    {
+        return listOfValidIngredients;
+    }
+
     public bool TryAddIngredient(KitchenObjectSO kitchenObjectSO)
     {
         // jika RecipeListValid tidak memimiliki KitchenObjectSO maka return false

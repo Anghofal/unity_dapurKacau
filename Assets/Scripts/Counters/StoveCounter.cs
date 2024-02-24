@@ -7,6 +7,7 @@ using static IHasProgressBarUI;
 
 public class StoveCounter : BaseCounter, IHasProgressBarUI
 {
+    // Creating enum with name of State
     public enum State
     {
         Idle,
@@ -14,24 +15,36 @@ public class StoveCounter : BaseCounter, IHasProgressBarUI
         Fried,
         Burned
     }
+    // Creating Event to sent enum State changes
     public event EventHandler<OnstateChangedEventArgs> OnStateChanged;
+    // Creating Event to sent Time
     public event EventHandler<IHasProgressBarUI.OnProgressChangeEventArgs> OnProgressChange;
-
     public class OnstateChangedEventArgs: EventArgs
     {
         public State state;
     }
+
+    // Creating Array that contain SO of Frying Recipe, Example : Fresh -> Cook
     [SerializeField] private FryingRecipeSO[] fryingRecipeSOArray;
     [SerializeField] private BurningRecipeSO[] burningRecipeSOArray;
+
+    // Creating variable that next will store SO from fryingRecipeSOArr
     private FryingRecipeSO fryingRecipeSO;
     private BurningRecipeSO burningRecipeSO;
+
+    // Time needed for frying
     private float fryingTimer;
+    // Time needed for burned
     private float burningTimer;
-    private State state;
+    // Contain Normalize Number Of Something
     private float progresNormalized;
+    // Contain what State this GameObject is now
+    private State state;
+    
 
     private void Start()
     {
+        // To make sure every start state is on idle
         state = State.Idle;
     }
 
@@ -41,26 +54,40 @@ public class StoveCounter : BaseCounter, IHasProgressBarUI
         {
             case State.Idle:
                 break;
+            // If State is State.Frying
             case State.Frying:
+                // 
                 if (HasKitchenObject())
                 {
+                    // fryingTimer += Time Needed to call all last Update function
                     fryingTimer += Time.deltaTime;
+                    
+                    // Normalize the value to percentage
                     progresNormalized = fryingTimer / fryingRecipeSO.timeCook;
+
+                    // Firing the event and sending progresNormalized
                     OnProgressChange?.Invoke(this, new IHasProgressBarUI.OnProgressChangeEventArgs
                     {
                         progresNormalized = progresNormalized,
                     });
+
+                    // If fryingTimer is more than fryingRecipeSO.timeCook or 4
                     if (fryingTimer > fryingRecipeSO.timeCook)
                     {
+                        // Get This KitchenObject Destroy and call the Function from KitchenObject
                         GetKitchenObject().DestroySelf();
                         KitchenObject.SpawnKitchenObject(fryingRecipeSO.output, this);
+
+                        // Get burningRecipeSO from the burningRecipeSOArray
                         burningRecipeSO = GetBurningRecipeSO(GetKitchenObject().GetKitchenObjectSO());
+                        // Change the State to State.Fried and set the burningTimer to 0
                         state = State.Fried;
                         burningTimer = 0f;
                         
                     }
                 }
                 break;
+            // If State is State.Fried
             case State.Fried:
                 if (HasKitchenObject())
                 {
