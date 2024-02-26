@@ -108,19 +108,17 @@ public class CuttingCounter : BaseCounter, IHasProgressBarUI
 
     private CutRecipeSO GetCutRecipeSO(KitchenObjectSO kitchenObjectSO)
     {
-        
-        // untuk setiap objek di dalam cutKitchenObjectSOArray
+
+        CutRecipeSO cutRecipeAny = null;
         foreach (CutRecipeSO cutRecipeSO in cutKitchenObjectSOArray)
         {
-            // jika objek.input adalah kitchenObjectSO
+            cutRecipeAny = cutRecipeSO;
             if (cutRecipeSO.input == kitchenObjectSO)
             {
-                // return recipe tersebut
                 return cutRecipeSO;
             }
         }
-        // eror nya disini
-        return null;
+        return cutRecipeAny;
     }
 
 }

@@ -89,22 +89,33 @@ public class StoveCounter : BaseCounter, IHasProgressBarUI
                 break;
             // If State is State.Fried
             case State.Fried:
+                // If this GameObject Has a kitchen object
                 if (HasKitchenObject())
                 {
+                    // burningTimer += Time Needed to call all last Update function
                     burningTimer += Time.deltaTime;
+
+                    // Normalize the value to percentage
                     progresNormalized = burningTimer / burningRecipeSO.burningTime;
+
+                    // Firing the event and sending progresNormalized
                     OnProgressChange?.Invoke(this, new IHasProgressBarUI.OnProgressChangeEventArgs
                     {
                         progresNormalized = progresNormalized,
                     });
+                    // If fryingTimer is more than burningRecipeSO.timeCook or 5
                     if (burningTimer > burningRecipeSO.burningTime)
                     {
+                        // Get This KitchenObject Destroy and call the Function from KitchenObject
                         GetKitchenObject().DestroySelf();
                         KitchenObject.SpawnKitchenObject(burningRecipeSO.output, this);
+
+                        // Change the State to State.Burned
                         state = State.Burned;
                     }
                 }
                 break;
+                // If State is State.Burned
             case State.Burned:
                 OnProgressChange?.Invoke(this, new IHasProgressBarUI.OnProgressChangeEventArgs
                 {
@@ -116,19 +127,26 @@ public class StoveCounter : BaseCounter, IHasProgressBarUI
 
     public override void Interact(Pemain pemain)
     {
+        // If this GameObject did not has a kitchen object
         if (!HasKitchenObject())
         {
-            // dan jika pemain memiliki kitchen object, maka kitchen object pada pemain di pindahkan ke clear counter
+            // And if pemain has a kitchen object
             if (pemain.HasKitchenObject())
             {
+                // If HasRecipe(pemain.GetKitchenObject().GetKitchenObjectSO()) is True
                 if (HasRecipe(pemain.GetKitchenObject().GetKitchenObjectSO()))
                 {
-                    
-
+                    // Get kitchen object pemain is holding and set parent to this GameObject
                     pemain.GetKitchenObject().SetKitchenObjectParent(this);
+
+                    // Fill fryingRecipeSO from fryingRecipeSOList
                     fryingRecipeSO = GetFryRecipeSO(GetKitchenObject().GetKitchenObjectSO());
+
+                    // Set fryingTimer and State to State.Frying
                     fryingTimer = 0;
                     state = State.Frying;
+
+                    // Firing Event And Changing State
                     OnStateChanged?.Invoke(this, new OnstateChangedEventArgs
                     {
                         state = state
@@ -137,25 +155,28 @@ public class StoveCounter : BaseCounter, IHasProgressBarUI
 
                 }
             }
-            // dan jika pemain tidak memiliki kitchen object 
+            // And if pemain did'nt have kitchen object
             else
             {
 
             }
         }
-        // if there is kitchen object on a clear counter
+        // if there is kitchen object on a Stove counter ( Take kitchen object to plate )
         else
         {
             // and if pemain has kitchen object
             if (pemain.HasKitchenObject())
             {
-                // jika kitchen object yang di pegang pemain adalah piring
+                // If pemain.GetKitchenObject()TryGetPlate is True output reference plateKitchenObject
                 if (pemain.GetKitchenObject().TryGetPlate(out PlateKitchenObject plateKitchenObject))
                 {
-                    // dapatkan kitchen object yang dipegang pemain sebagai plateKitchenObject
+                    // If plateKitchenObject.TryAddIngredient Is True and add ingredient to List
                     if (plateKitchenObject.TryAddIngredient(GetKitchenObject().GetKitchenObjectSO()))
                     {
+                        // Destroy kitchen object on this counter 
                         GetKitchenObject().DestroySelf();
+                        
+                        // Change State to idle
                         state = State.Idle;
                         OnStateChanged?.Invoke(this, new OnstateChangedEventArgs
                         {
@@ -168,9 +189,10 @@ public class StoveCounter : BaseCounter, IHasProgressBarUI
                     }
                 }
             }
-            // and if pemain did not have the kitchen object, kitchen object on this clear counter move to the pemain
+            // And if pemain did not have the kitchen object ( Take kitchen object to pemain )
             else
             {
+                // Set Kitchen object parent from this counter to pemain
                 GetKitchenObject().SetKitchenObjectParent(pemain);
                 state = State.Idle;
                 OnStateChanged?.Invoke(this, new OnstateChangedEventArgs
@@ -185,6 +207,7 @@ public class StoveCounter : BaseCounter, IHasProgressBarUI
         }
     }
 
+    
     private KitchenObjectSO GetFryItemRecipeFromSO(KitchenObjectSO kitchen)
     {
         FryingRecipeSO fryRecipeSO = GetFryRecipeSO(kitchen);
@@ -196,10 +219,14 @@ public class StoveCounter : BaseCounter, IHasProgressBarUI
 
     }
 
-    private bool HasRecipe(KitchenObjectSO kitchen)
+    
+    private bool HasRecipe(KitchenObjectSO kitchenObjectSO)
     {
-        FryingRecipeSO fryRecipeSO = GetFryRecipeSO(kitchen);
-        if (fryRecipeSO.input == kitchen)
+        // Getting fryRecipeSO from GetFryRecipeSO(kitchen) function
+        FryingRecipeSO fryRecipeSO = GetFryRecipeSO(kitchenObjectSO);
+
+        // If kitchenObjectSO is equal to fryRecipeSO.input
+        if (fryRecipeSO.input == kitchenObjectSO)
         {
             return true;
         }
@@ -208,30 +235,45 @@ public class StoveCounter : BaseCounter, IHasProgressBarUI
 
     private FryingRecipeSO GetFryRecipeSO(KitchenObjectSO kitchenObjectSO)
     {
+        // Creating empty variable to store variable type FryingRecipeSO
         FryingRecipeSO fryingRecipeAny = null;
+
+        // For each fryRecipeSO in array
         foreach (FryingRecipeSO fryRecipeSO in fryingRecipeSOArray)
         {
+            // Fill the fryingRecipeAny per iteration with fryRecipeSO
             fryingRecipeAny = fryRecipeSO;
+
+            // If kitchenObjectSO is equal to the frying recipe ( MeatPatty Uncooked )
             if (fryRecipeSO.input == kitchenObjectSO)
             {
+                // Return that kitchenObjectSO
                 return fryRecipeSO;
             }
         }
+        // If not return the last iteration Of The Recipe
         return fryingRecipeAny;
         
     }
 
     private BurningRecipeSO GetBurningRecipeSO(KitchenObjectSO kitchenObjectSO)
     {
-        BurningRecipeSO fryingRecipeAny = null;
+        // Creating empty variable to store variable type BurningRecipeSO
+        BurningRecipeSO burningRecipeAny = null;
+
+        // For each burningRecipeSO in array
         foreach (BurningRecipeSO burningRecipeSO in burningRecipeSOArray)
         {
-            fryingRecipeAny = burningRecipeSO;
+            // Fill the fryingRecipeAny per iteration with burningRecipeSO
+            burningRecipeAny = burningRecipeSO;
+
+            // If kitchenObjectSO is equal to the burning recipe ( MeatPatty Cooked )
             if (burningRecipeSO.input == kitchenObjectSO)
             {
+                // Return that kitchenObjectSO
                 return burningRecipeSO;
             }
         }
-        return fryingRecipeAny;
+        return burningRecipeAny;
     }
 }
