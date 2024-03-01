@@ -267,7 +267,7 @@ public class StoveCounter : BaseCounter, IHasProgressBarUI
             // Fill the fryingRecipeAny per iteration with burningRecipeSO
             burningRecipeAny = burningRecipeSO;
 
-            // If kitchenObjectSO is equal to the burning recipe ( MeatPatty Cooked )
+            // If kitchenObjectSO is equal to the burning recipe ( example MeatPatty Cooked == MeatPatty Cooked )
             if (burningRecipeSO.input == kitchenObjectSO)
             {
                 // Return that kitchenObjectSO

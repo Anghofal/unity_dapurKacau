@@ -5,39 +5,40 @@ using UnityEngine;
 
 public class CuttingCounter : BaseCounter, IHasProgressBarUI
 {
-    // Array berisi kitchenObjectSO dari recipe sayuran ke potongan sayuran
+    // Array fill with recipe kitchen object that can be cut
     [SerializeField] private CutRecipeSO[] cutKitchenObjectSOArray;
+    
     private int cuttingProgres;
     public event EventHandler<IHasProgressBarUI.OnProgressChangeEventArgs> OnProgressChange;
 
     public override void Interact(Pemain pemain)
     {
         
-        // condition for the clear counter is there kitchen object there
+        // Condition for the clear counter is there kitchen object there
         if (!HasKitchenObject())
         {
-            // dan jika pemain memiliki kitchen object, maka kitchen object pada pemain di pindahkan ke clear counter
+            // And if pemain has a kitchen object set kitchen object to this object
             if (pemain.HasKitchenObject())
             {
                 pemain.GetKitchenObject().SetKitchenObjectParent(this);
                 
             }
-            // dan jika pemain tidak memiliki kitchen object 
+            // And if pemain did'nt have GameObject
             else
             {
 
             }
         }
-        // if there is kitchen object on a clear counter
+        // If there is kitchen object on a clear counter
         else
         {
-            // and if pemain has kitchen object
+            // And if pemain has kitchen object
             if (pemain.HasKitchenObject())
             {
-                // jika kitchen object yang di pegang pemain adalah piring
+                // If pemain.GetKitchenObject()TryGetPlate is True ( Is a plate ) output reference plateKitchenObject
                 if (pemain.GetKitchenObject().TryGetPlate(out PlateKitchenObject plateKitchenObject))
                 {
-                    // dapatkan kitchen object yang dipegang pemain sebagai plateKitchenObject
+                    // If plateKitchenObject.TryAddIngredient Is True and add ingredient to List
                     if (plateKitchenObject.TryAddIngredient(GetKitchenObject().GetKitchenObjectSO()))
                     {
                         GetKitchenObject().DestroySelf();
@@ -55,25 +56,37 @@ public class CuttingCounter : BaseCounter, IHasProgressBarUI
 
     public override void InteractAlternate(Pemain pemain)
     {
-        // jika cutting counter memiliki objek dan HasRecipe() return true
+        // If this GameObject has a kitchen object and function HasRecipe() return true
         if (HasKitchenObject() && HasRecipe(GetKitchenObject().GetKitchenObjectSO()))
         {
+            // Adding cutting counter from 0 -> 4
             cuttingProgres++;
 
+            // Getting reference CutRecipeSO so later we can get cutRecipeSO.cuttingCountProgres
             CutRecipeSO cutRecipeSO = GetCutRecipeSO(GetKitchenObject().GetKitchenObjectSO());
 
+            // Firing event if the cuttingProgress is added
             OnProgressChange?.Invoke(this, new IHasProgressBarUI.OnProgressChangeEventArgs
             {
+                // progresNormalized is cuttingProgres now divided by cutRecipeSO.cuttingCountProgres ( Maximum cut amount )
+                // so progresNormalized is percentage of cuttingProgres
                 progresNormalized = (float)cuttingProgres / cutRecipeSO.cuttingCountProgres
 
             });
+            // If cuttingProgres is equal or more than cutRecipeSO.cuttingCountProgres ( Maximum cut amount )
             if (cuttingProgres >= cutRecipeSO.cuttingCountProgres)
             {
+                // Getting kitchen object using function GetCutItemRecipeFromSO
                 KitchenObjectSO cutKitchenObjectSO = GetCutItemRecipeFromSO(GetKitchenObject().GetKitchenObjectSO());
+
+                // Destroy kitchen object on this counter
                 GetKitchenObject().DestroySelf();
+
+                // Spawn the kitchen object just we get from function GetCutItemRecipeFromSO
                 KitchenObject.SpawnKitchenObject(cutKitchenObjectSO, this);
                 cuttingProgres = 0;
 
+                // Firing event to make progresNormalized back to 0
                 OnProgressChange?.Invoke(this, new IHasProgressBarUI.OnProgressChangeEventArgs
                 {
                     progresNormalized = (float)cuttingProgres / cutRecipeSO.cuttingCountProgres
@@ -83,11 +96,15 @@ public class CuttingCounter : BaseCounter, IHasProgressBarUI
         }
     }
 
-    private KitchenObjectSO GetCutItemRecipeFromSO(KitchenObjectSO kitchen)
+    private KitchenObjectSO GetCutItemRecipeFromSO(KitchenObjectSO kitchenObjectSO)
     {
-        CutRecipeSO cutRecipeSO = GetCutRecipeSO(kitchen);
-        if (cutRecipeSO.input == kitchen)
+        // Get cutRecipeSO from function  GetCutRecipeSO
+        CutRecipeSO cutRecipeSO = GetCutRecipeSO(kitchenObjectSO);
+
+        // CutRecipeSO.input equal to function parameter kitchenObjectSO ( example tomato )
+        if (cutRecipeSO.input == kitchenObjectSO)
         {
+            // Return the cutRecipeSO.output ( example sliced tomato )
             return cutRecipeSO.output;
         }
         return null;
@@ -96,11 +113,12 @@ public class CuttingCounter : BaseCounter, IHasProgressBarUI
 
     private bool HasRecipe(KitchenObjectSO kitchen)
     {
-        // dapatkan recipe dari fungsi GetCutRecipeSO
+        // Get cutRecipeSO from function GetCutRecipeSO
         CutRecipeSO cutRecipeSO = GetCutRecipeSO(kitchen);
-        // jika recipe.input adalah kitchen
+        // CutRecipeSO.input equal to function parameter kitchenObjectSO ( example tomato )
         if (cutRecipeSO.input == kitchen)
         {
+            // Return true
             return true;
         }
         return false;
@@ -108,16 +126,23 @@ public class CuttingCounter : BaseCounter, IHasProgressBarUI
 
     private CutRecipeSO GetCutRecipeSO(KitchenObjectSO kitchenObjectSO)
     {
-
+        // Creating empty variable to store variable type CutRecipeSO
         CutRecipeSO cutRecipeAny = null;
+
+        // For each cutRecipeSOin array
         foreach (CutRecipeSO cutRecipeSO in cutKitchenObjectSOArray)
         {
+            // Fill the cutRecipeAny per iteration with cutRecipeSO
             cutRecipeAny = cutRecipeSO;
+
+            // If kitchenObjectSO is equal to the cut recipe ( example Tomato == Tomato )
             if (cutRecipeSO.input == kitchenObjectSO)
             {
+                // Return that cutRecipeSO
                 return cutRecipeSO;
             }
         }
+        // If not return the last iteration Of The Recipe
         return cutRecipeAny;
     }
 
