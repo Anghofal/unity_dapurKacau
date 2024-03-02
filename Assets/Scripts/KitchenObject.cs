@@ -29,32 +29,34 @@ public class KitchenObject : MonoBehaviour
             // This function will set this.kitchenObjectParent ( example this.ClearCounter ) to null
             this.kitchenObjectParent.ClearKitchenObject();
         }
-        // This function will set this.kitchenObjectParent ( example this.ClearCounter ) to
-        // kitchenObjectParent from the parameter ( example kitchenObjectParent is pemain)
-        // Basically pemain will set kitchenObjectParent to ClearCounter
+        // Move parent from this.kitchenObjectParent ( example this.ClearCounter ) to
+        // kitchenObjectParent ( example kitchenObjectParent is pemain ) 
+        // Now the kitchenObject knows the parent is pemain ( pick up items logic )
         this.kitchenObjectParent = kitchenObjectParent;
 
-
-        if (kitchenObjectParent.HasKitchenObject())
-        {
-            Debug.LogError("kitchen counter Alredy Has A Kitchen Object");
-        }
+        // For example if the kitchen object is tomato next we make sure the pemain knows he is holding tomato
+        // Set the kitchen object from base counter script to spesific kitchen object ( example tomato )
         kitchenObjectParent.SetKitchenObject(this);
 
+        // We spawn the kitchen object to spesific location in this case to pemain
         transform.parent = kitchenObjectParent.GetKitchenObjectLocation();
         transform.localPosition = Vector3.zero;
     }
 
+    // A function that if we call will return parameter plateKitchenObject and a boolean
     public bool TryGetPlate(out PlateKitchenObject plateKitchenObject)
     {
+        // Check if this GameObject has class or script of PlateKitchenObject
         if (this is PlateKitchenObject)
         {
+            // Fill the plateKitchenObject with this kichen object ( example tomato )
+            // Then convert that kitchen object to PlateKitchenObject
             plateKitchenObject = this as PlateKitchenObject;
             return true;
         }
         else
         {
-            plateKitchenObject=null;
+            plateKitchenObject = null;
             return false;
         }
     }
@@ -64,18 +66,23 @@ public class KitchenObject : MonoBehaviour
         return kitchenObjectParent;
     }
 
+    
     public void DestroySelf()
     {
+        // Clear the parent of this kitchen object and then destroy the game object
         kitchenObjectParent.ClearKitchenObject();
         Destroy(gameObject);
     }
 
     public static KitchenObject SpawnKitchenObject(KitchenObjectSO kitchenObjectSO, IKitchenObjectParent kitchenObjectParent)
     {
+        // Get this kitchen object kitchenObjectSO and then spawned it
         Transform kitchenObjectTransform = Instantiate(kitchenObjectSO.prefab);
         
-        // got the reference from game object that we just spawned
+        // Got the reference from game object that we just spawned
         KitchenObject kitchenObject = kitchenObjectTransform.GetComponent<KitchenObject>();
+
+        // Set parent of kitchen object just spawned to the parameter
         kitchenObject.SetKitchenObjectParent(kitchenObjectParent);
         return kitchenObject;
     }
