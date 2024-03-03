@@ -10,7 +10,7 @@ public class BaseCounter : MonoBehaviour, IKitchenObjectParent
 
     // This will be used to set or get what kitchen object is currently on this counter
     private KitchenObject kitchenObject;
-
+    
     // Abstract function that can be override for counter GameObject
     public virtual void Interact(Pemain pemain)
     {

@@ -5,21 +5,34 @@ using System;
 
 public class Pemain : MonoBehaviour, IKitchenObjectParent
 {
-    //Ingat selalu gunakan private dan serializefield dan bukan public
+    // Edit this when pemain is walking ( clicking movement button )
+    private bool isWalking;
+
+    // Edit this to change pemain movement speed from unity
     [SerializeField] private float movSpeed;
     
+    // Reference script GameInput
     [SerializeField] private GameInput gameInput;
+
+    // Reference layer mask we made for the counter
     [SerializeField] private LayerMask countersLayerMask;
     
+    // Last move direction pemain is going to
     private Vector3 lastMoveDir;
 
+    // Reference for the what counter pemain selected to example selectedCounter.ClearCounter
     BaseCounter selectedCounter;
+    
+    // Firing event when we select one of the counter
     public event EventHandler<OnSelectedCounterChangedEventArgs> OnSelectedCounterChanged;
 
+    // Empty GameObject later we gonna spawn kitchen object to this point
     [SerializeField] private Transform kitchenObjectHoldPoint;
+
+    // Reference for what kitchen object what pemain holding
     private KitchenObject kitchenObject;
 
-    // mendapatkan reference menggunakan instance
+    // Getting reference directly using instance so later we can use function of this script directly
     /*
     private static Pemain instanceField;
     public static Pemain GetInstanceField()
@@ -31,7 +44,9 @@ public class Pemain : MonoBehaviour, IKitchenObjectParent
         Pemain.instanceField = instanceField;
     }
     */
-    // sama seperti script diatas
+    
+    // Getting reference directly using instance so later we can use function of this script
+    // directly by accesing this instance ( example Pemain.Instance.GetKitchenObject )
     private static Pemain instance;
     public static Pemain Instance
     {
@@ -48,36 +63,43 @@ public class Pemain : MonoBehaviour, IKitchenObjectParent
     // compact version
     // public static Pemain Instance {get; private set;}
 
+    // Return kitchenObjectHoldPoint ( point where the pemain is holding the kitchen object )
     public Transform GetKitchenObjectLocation()
     {
         return kitchenObjectHoldPoint;
     }
 
+    // Set this.kitchenObject to kitchenObject we get
+    // Basicly we set parent kitchen object to pemain
     public void SetKitchenObject(KitchenObject kitchenObject)
     {
         this.kitchenObject = kitchenObject;
     }
 
+    // To know what kitchenObject is player holding
     public KitchenObject GetKitchenObject()
     {
         return kitchenObject;
     }
 
+    // To delete the reference of pemain kitchen object
     public void ClearKitchenObject()
     {
         kitchenObject = null;
     }
 
+    // To check if pemain holding a kitchen object
     public bool HasKitchenObject()
     {
         return kitchenObject != null;
     }
 
+    // Class to store variable when firing event
     public class OnSelectedCounterChangedEventArgs : EventArgs
     {
         public BaseCounter selectedCounter;
     }
-    private bool isWalking;
+    
 
 
 
