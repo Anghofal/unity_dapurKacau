@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class LookAtCamera : MonoBehaviour
 {
+    // Creating enum so we can change the enum Mode later
     private enum Mode
     {
         LookAt,
@@ -12,10 +13,13 @@ public class LookAtCamera : MonoBehaviour
         CameraForwardInverted,
     }
 
+    // We can change mode from unity editor
     [SerializeField] private Mode mode;
 
+    // This Update function will be called last after all the update
     private void LateUpdate()
     {
+        
         switch (mode)
         {
             case Mode.LookAt:
